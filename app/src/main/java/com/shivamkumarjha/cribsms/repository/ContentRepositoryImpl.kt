@@ -3,6 +3,7 @@ package com.shivamkumarjha.cribsms.repository
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
+import android.provider.Telephony
 import com.shivamkumarjha.cribsms.di.IoDispatcher
 import com.shivamkumarjha.cribsms.model.SMSData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,33 +23,29 @@ class ContentRepositoryImpl(
         val timeStart = Date(System.currentTimeMillis() - (daysGap * dayMilliSeconds)).time
         val timeEnd = Date(System.currentTimeMillis()).time
 
-        //Get all SMS on device using Content resolver
+        //Get matching SMS on device using Content resolver
         val uri: Uri = Uri.parse("content://sms/")
         val cursor: Cursor? = contentResolver.query(
             uri,
             null,
-            "address LIKE ? AND date BETWEEN ? AND ?",
+            "${Telephony.Sms.ADDRESS} LIKE ? AND ${Telephony.Sms.DATE} BETWEEN ? AND ?",
             arrayOf("%$phone%", "" + timeStart, "" + timeEnd),
-            "date DESC"
+            "${Telephony.Sms.DATE} DESC"
         )
         if (cursor != null) {
             val totalSMS: Int = cursor.count
 
-            //Populate all messages
+            //Populate matching messages
             val cursorMessages: ArrayList<SMSData> = arrayListOf()
             if (cursor.moveToFirst()) {
                 for (i in 0 until totalSMS) {
-                    val folder =
-                        if (cursor.getString(cursor.getColumnIndexOrThrow("type")).contains("1")) {
-                            "inbox"
-                        } else {
-                            "sent"
-                        }
+                    val type = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.TYPE))
+                    val folder = if (type.contains("1")) "inbox" else "sent"
                     val smsData = SMSData(
                         cursor.getString(cursor.getColumnIndexOrThrow("_id")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("address")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("body")),
-                        cursor.getString(cursor.getColumnIndexOrThrow("date")),
+                        cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.ADDRESS)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.BODY)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.DATE)),
                         folder
                     )
                     cursorMessages.add(smsData)
