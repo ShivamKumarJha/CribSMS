@@ -65,6 +65,7 @@ dependencies {
     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //Test
     testImplementation 'junit:junit:4.13.2'
