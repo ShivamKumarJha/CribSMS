@@ -7,4 +7,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <color name="grey_100">#FAFAFA</color>
+    <color name="grey_200">#EEEEEE</color>
+    <color name="grey_500">#9E9E9E</color>
+    <color name="grey_700">#616161</color>
+    <color name="grey_900">#212121</color>
+    
+    <!-- Below colors will override in night mode -->
+    <color name="background">@color/white</color>
+    <color name="dialog">@color/white</color>
+    <color name="text">@color/purple_500</color>
 </resources>

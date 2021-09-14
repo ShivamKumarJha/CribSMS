@@ -13,4 +13,27 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <!-- EditText styles -->
+    <style name="Theme.App.TextInputLayout.Normal" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textColorHint">@color/grey_500</item>
+        <item name="boxStrokeColor">@color/grey_200</item>
+        <item name="hintTextColor">@color/grey_500</item>
+        <item name="background">@color/dialog</item>
+        <item name="boxBackgroundColor">@color/dialog</item>
+    </style>
+
+    <style name="Theme.App.EditText.Normal" parent="Widget.AppCompat.EditText">
+        <!-- empty for now -->
+    </style>
+
+    <!-- Button styles -->
+    <style name="Theme.GroupAlike.Button.Normal" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/selector_button</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
 </resources>

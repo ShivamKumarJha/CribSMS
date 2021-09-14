@@ -17,6 +17,10 @@ class HomeViewModel : ViewModel() {
     private val _messages = MutableLiveData<ArrayList<SMSData>>()
     val messages: LiveData<ArrayList<SMSData>> = _messages
 
+    init {
+        _isLoading.postValue(false)
+    }
+
     fun getSMS(contentResolver: ContentResolver) {
         _isLoading.postValue(true)
         val cursorMessages: ArrayList<SMSData> = arrayListOf()

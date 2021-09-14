@@ -4,10 +4,12 @@ import android.Manifest
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.shivamkumarjha.cribsms.R
 import com.shivamkumarjha.cribsms.databinding.FragmentHomeBinding
+import com.shivamkumarjha.cribsms.ui.extensions.hideKeyboard
 import com.shivamkumarjha.cribsms.ui.extensions.toast
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -30,6 +32,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
         binding = FragmentHomeBinding.bind(view)
+        setViews()
         observer()
         requestSMSPermission()
     }
@@ -39,9 +42,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onDestroyView()
     }
 
+    private fun setViews() {
+        binding?.root?.setOnClickListener {
+            hideKeyboard()
+        }
+    }
+
     private fun observer() {
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-
+            binding?.submitProgressBar?.isVisible = isLoading
         }
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
             if (!messages.isNullOrEmpty()) {
