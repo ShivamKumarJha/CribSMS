@@ -8,5 +8,5 @@
     <string name="invalid_days">Invalid number of days</string>
     <string name="error">Error</string>
     <string name="messages_empty">Sorry, no messages found</string>
-    <string name="messages_count_value" formatted="true">%1$s messages of found.</string>
+    <string name="messages_count_value" formatted="true">%1$s messages found.</string>
 </resources>
