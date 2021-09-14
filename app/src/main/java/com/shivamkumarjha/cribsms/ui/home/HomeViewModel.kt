@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.shivamkumarjha.cribsms.R
 import com.shivamkumarjha.cribsms.model.SMSData
+import java.util.*
 
 
 class HomeViewModel : ViewModel() {
@@ -38,14 +39,27 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun getSMS(contentResolver: ContentResolver) {
+    fun getSMS(contentResolver: ContentResolver, phone: String, daysGap: Int) {
         _isLoading.postValue(true)
-        val cursorMessages: ArrayList<SMSData> = arrayListOf()
+
+        //Date
+        val dayMilliSeconds = (1000 * 60 * 60 * 24).toLong()
+        val timeStart = Date(System.currentTimeMillis() - (daysGap * dayMilliSeconds)).time
+        val timeEnd = Date(System.currentTimeMillis()).time
 
         //Get all SMS on device using Content resolver
         val uri: Uri = Uri.parse("content://sms/")
-        val cursor: Cursor = contentResolver.query(uri, null, null, null, null) ?: return
+        val cursor: Cursor = contentResolver.query(
+            uri,
+            null,
+            "address LIKE ? AND date BETWEEN ? AND ?",
+            arrayOf("%$phone%", "" + timeStart, "" + timeEnd),
+            "date DESC"
+        ) ?: return
         val totalSMS: Int = cursor.count
+
+        //Populate all messages
+        val cursorMessages: ArrayList<SMSData> = arrayListOf()
         if (cursor.moveToFirst()) {
             for (i in 0 until totalSMS) {
                 val folder =
@@ -66,8 +80,8 @@ class HomeViewModel : ViewModel() {
             }
         }
         cursor.close()
+        _messages.postValue(cursorMessages)
 
         _isLoading.postValue(false)
-        _messages.postValue(cursorMessages)
     }
 }

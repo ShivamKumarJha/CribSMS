@@ -2,6 +2,7 @@ package com.shivamkumarjha.cribsms.ui.home
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
@@ -24,7 +25,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val readSMSPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
             if (result) {
-                viewModel.getSMS(requireActivity().contentResolver)
+                val daysGap = daysInput()
+                if (daysGap != null) {
+                    viewModel.getSMS(requireActivity().contentResolver, phoneInput(), daysGap)
+                }
             } else {
                 requireContext().toast(getString(R.string.sms_read_permission_denied))
             }
@@ -35,7 +39,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding = FragmentHomeBinding.bind(view)
         setViews()
         observer()
-        requestSMSPermission()
     }
 
     override fun onDestroyView() {
@@ -52,6 +55,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         binding?.daysEditText?.afterTextChanged {
             validateInput()
+        }
+        binding?.submitButton?.setOnClickListener {
+            requestSMSPermission()
         }
     }
 
@@ -80,19 +86,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
             if (!messages.isNullOrEmpty()) {
+                requireContext().toast(messages.size.toString())
+                messages.forEach {
+                    Log.d("ZXCVB", "${it.time} ${it.address} ${it.folder}")
+                }
             }
         }
     }
 
     private fun validateInput() {
-        try {
-            val phone: String = binding?.phoneEditText?.text?.toString()?.trim() ?: ""
-            val days: Int? = binding?.daysEditText?.text?.toString()?.trim()?.toIntOrNull()
-            viewModel.inputValidator(phone, days)
-        } catch (exception: Exception) {
-            requireContext().toast(exception.localizedMessage ?: getString(R.string.error))
-        }
+        viewModel.inputValidator(phoneInput(), daysInput())
     }
+
+    private fun phoneInput(): String = binding?.phoneEditText?.text?.toString()?.trim() ?: ""
+
+    private fun daysInput(): Int? = binding?.daysEditText?.text?.toString()?.trim()?.toIntOrNull()
 
     private fun requestSMSPermission() {
         readSMSPermission.launch(Manifest.permission.READ_SMS)
