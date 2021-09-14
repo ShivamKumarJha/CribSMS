@@ -5,6 +5,8 @@
     <string name="enter_number_of_days_to_search_hint">Enter number of days to search in</string>
     <string name="submit">Submit</string>
     <string name="invalid_phone_number">Invalid phone number</string>
-    <string name="invalid_days">Invalid days</string>
+    <string name="invalid_days">Invalid number of days</string>
     <string name="error">Error</string>
+    <string name="messages_empty">Sorry, no messages found</string>
+    <string name="messages_count_value" formatted="true">%1$s messages of found.</string>
 </resources>

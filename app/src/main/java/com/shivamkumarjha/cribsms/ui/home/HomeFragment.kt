@@ -2,7 +2,6 @@ package com.shivamkumarjha.cribsms.ui.home
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
@@ -88,10 +87,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
             if (!messages.isNullOrEmpty()) {
-                requireContext().toast(messages.size.toString())
-                messages.forEach {
-                    Log.d("ZXCVB", "${it.time} ${it.address} ${it.folder}")
-                }
+                binding?.countTv?.text =
+                    getString(R.string.messages_count_value, messages.size.toString())
+            } else {
+                binding?.countTv?.text = getString(R.string.messages_empty)
             }
         }
     }
