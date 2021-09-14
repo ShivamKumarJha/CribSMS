@@ -13,7 +13,9 @@ import com.shivamkumarjha.cribsms.databinding.FragmentHomeBinding
 import com.shivamkumarjha.cribsms.ui.extensions.afterTextChanged
 import com.shivamkumarjha.cribsms.ui.extensions.hideKeyboard
 import com.shivamkumarjha.cribsms.ui.extensions.toast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
     //Views
     private var binding: FragmentHomeBinding? = null
@@ -27,7 +29,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (result) {
                 val daysGap = daysInput()
                 if (daysGap != null) {
-                    viewModel.getSMS(requireActivity().contentResolver, phoneInput(), daysGap)
+                    viewModel.getSMS(phoneInput(), daysGap)
                 }
             } else {
                 requireContext().toast(getString(R.string.sms_read_permission_denied))

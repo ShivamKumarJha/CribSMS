@@ -1,6 +1,7 @@
 package com.shivamkumarjha.cribsms.ui.home
 
 import android.content.ContentResolver
+import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.util.Patterns
@@ -9,10 +10,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.shivamkumarjha.cribsms.R
 import com.shivamkumarjha.cribsms.model.SMSData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
+import javax.inject.Inject
 
-
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
 
     private val _formState = MutableLiveData<HomeFormState>()
     val formState: LiveData<HomeFormState> = _formState
@@ -22,6 +26,8 @@ class HomeViewModel : ViewModel() {
 
     private val _messages = MutableLiveData<ArrayList<SMSData>>()
     val messages: LiveData<ArrayList<SMSData>> = _messages
+
+    private val contentResolver: ContentResolver = context.contentResolver
 
     init {
         _isLoading.postValue(false)
@@ -39,7 +45,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun getSMS(contentResolver: ContentResolver, phone: String, daysGap: Int) {
+    fun getSMS(phone: String, daysGap: Int) {
         _isLoading.postValue(true)
 
         //Date
