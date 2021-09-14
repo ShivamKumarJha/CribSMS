@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.shivamkumarjha.cribsms.R
 import com.shivamkumarjha.cribsms.databinding.FragmentHomeBinding
+import com.shivamkumarjha.cribsms.ui.extensions.afterTextChanged
 import com.shivamkumarjha.cribsms.ui.extensions.hideKeyboard
 import com.shivamkumarjha.cribsms.ui.extensions.toast
 
@@ -46,15 +47,50 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding?.root?.setOnClickListener {
             hideKeyboard()
         }
+        binding?.phoneEditText?.afterTextChanged {
+            validateInput()
+        }
+        binding?.daysEditText?.afterTextChanged {
+            validateInput()
+        }
     }
 
     private fun observer() {
+        viewModel.formState.observe(viewLifecycleOwner) { formState ->
+            if (formState != null) {
+                binding?.submitButton?.isEnabled = formState.isInputValid
+
+                val phoneText = binding?.phoneEditText?.text.toString().trim()
+                if (formState.phoneError != null && phoneText.isNotEmpty()) {
+                    binding?.phoneLayout?.error = getString(formState.phoneError)
+                } else {
+                    binding?.phoneLayout?.error = null
+                }
+
+                val daysText = binding?.daysEditText?.text.toString().trim()
+                if (formState.daysError != null && daysText.isNotEmpty()) {
+                    binding?.daysLayout?.error = getString(formState.daysError)
+                } else {
+                    binding?.daysLayout?.error = null
+                }
+            }
+        }
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding?.submitProgressBar?.isVisible = isLoading
         }
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
             if (!messages.isNullOrEmpty()) {
             }
+        }
+    }
+
+    private fun validateInput() {
+        try {
+            val phone: String = binding?.phoneEditText?.text?.toString()?.trim() ?: ""
+            val days: Int? = binding?.daysEditText?.text?.toString()?.trim()?.toIntOrNull()
+            viewModel.inputValidator(phone, days)
+        } catch (exception: Exception) {
+            requireContext().toast(exception.localizedMessage ?: getString(R.string.error))
         }
     }
 

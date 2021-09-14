@@ -4,4 +4,7 @@
     <string name="enter_phone_number_hint">Enter phone number</string>
     <string name="enter_number_of_days_to_search_hint">Enter number of days to search in</string>
     <string name="submit">Submit</string>
+    <string name="invalid_phone_number">Invalid phone number</string>
+    <string name="invalid_days">Invalid days</string>
+    <string name="error">Error</string>
 </resources>

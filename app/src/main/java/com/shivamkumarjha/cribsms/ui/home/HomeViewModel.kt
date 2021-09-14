@@ -3,13 +3,18 @@ package com.shivamkumarjha.cribsms.ui.home
 import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.shivamkumarjha.cribsms.R
 import com.shivamkumarjha.cribsms.model.SMSData
 
 
 class HomeViewModel : ViewModel() {
+
+    private val _formState = MutableLiveData<HomeFormState>()
+    val formState: LiveData<HomeFormState> = _formState
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -19,6 +24,18 @@ class HomeViewModel : ViewModel() {
 
     init {
         _isLoading.postValue(false)
+    }
+
+    fun inputValidator(phone: String, days: Int?) {
+        if (!Patterns.PHONE.matcher(phone).matches()) {
+            _formState.value =
+                HomeFormState(phoneError = R.string.invalid_phone_number, isInputValid = false)
+        } else if (days == null || days <= 0) {
+            _formState.value =
+                HomeFormState(daysError = R.string.invalid_days, isInputValid = false)
+        } else {
+            _formState.value = HomeFormState(isInputValid = true)
+        }
     }
 
     fun getSMS(contentResolver: ContentResolver) {
