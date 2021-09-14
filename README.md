@@ -6,7 +6,7 @@ Crib SMS app
 
 Application Architecture
 ------------
-**MVVM with Hilt** for Dependency injection.  
+**MVVM repository pattern and Hilt** for Dependency injection.  
 [Application Architecture Guide](https://developer.android.com/jetpack/guide) 
 
 Libraries Used

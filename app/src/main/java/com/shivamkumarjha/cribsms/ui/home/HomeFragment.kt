@@ -4,7 +4,6 @@ import android.Manifest
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.shivamkumarjha.cribsms.R
@@ -81,9 +80,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     binding?.daysLayout?.error = null
                 }
             }
-        }
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding?.submitProgressBar?.isVisible = isLoading
         }
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
             if (!messages.isNullOrEmpty()) {
