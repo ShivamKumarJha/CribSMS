@@ -1,11 +1,14 @@
 package com.shivamkumarjha.cribsms.ui.home
 
+import android.Manifest
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.shivamkumarjha.cribsms.R
 import com.shivamkumarjha.cribsms.databinding.FragmentHomeBinding
+import com.shivamkumarjha.cribsms.ui.extensions.toast
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     //Views
@@ -14,10 +17,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     //ViewModel
     private val viewModel: HomeViewModel by viewModels()
 
+    //Result
+    private val readSMSPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+            if (result) {
+                viewModel.getSMS(requireActivity().contentResolver)
+            } else {
+                requireContext().toast(getString(R.string.sms_read_permission_denied))
+            }
+        }
+
     override fun onViewCreated(view: View, savedState: Bundle?) {
         super.onViewCreated(view, savedState)
         binding = FragmentHomeBinding.bind(view)
         observer()
+        requestSMSPermission()
     }
 
     override fun onDestroyView() {
@@ -31,9 +45,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
             if (!messages.isNullOrEmpty()) {
-
             }
         }
+    }
+
+    private fun requestSMSPermission() {
+        readSMSPermission.launch(Manifest.permission.READ_SMS)
     }
 
 }
